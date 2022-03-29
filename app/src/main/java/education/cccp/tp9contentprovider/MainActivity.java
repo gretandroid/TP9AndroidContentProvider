@@ -45,16 +45,18 @@ public class MainActivity extends AppCompatActivity {
                         .append("id: ")
                         .append(cursor.getString(
                                 cursor.getColumnIndex(ChapitreBaseSqlite
-                                .COL_ID)))
+                                        .COL_ID)))
                         .append(" name : ")
-                        .append(cursor.getString(cursor.getColumnIndex(ChapitreBaseSqlite
-                                .COL_NAME)))
+                        .append(cursor.getString(cursor
+                                .getColumnIndex(ChapitreBaseSqlite
+                                        .COL_NAME)))
                         .append(" description : ")
-                        .append(cursor.getString(cursor.getColumnIndex(ChapitreBaseSqlite
-                                .COL_DESC)))
+                        .append(cursor.getString(cursor
+                                .getColumnIndex(ChapitreBaseSqlite
+                                        .COL_DESC)))
                         .toString();
                 Log.d(MainActivity.class.getSimpleName(),
-                        "queryResult : "+queryResult);
+                        "queryResult : " + queryResult);
                 Toast.makeText(this,
                         queryResult,
                         Toast.LENGTH_SHORT)
