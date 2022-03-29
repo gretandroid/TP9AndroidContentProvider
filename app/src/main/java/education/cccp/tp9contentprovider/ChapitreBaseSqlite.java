@@ -19,6 +19,19 @@ import androidx.annotation.Nullable;
 
 public class ChapitreBaseSqlite extends SQLiteOpenHelper {
 
+    public static final int VERSION = 1;
+    public static final String NAME_DB = "chapitre.db";
+    public static final String TABLE_CHAPITRE = "table_chapitre";
+    public static final String COL_ID = "ID";
+    public static final String COL_NAME = "NAME";
+    public static final String COL_DESC = "DESCRIPTION";
+    public static final String CREATE_TABLE =
+            "CREATE TABLE " + TABLE_CHAPITRE +
+                    " (" + COL_ID +
+                    " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                    COL_NAME + " TEXT NOT NULL, " +
+                    COL_DESC + " TEXT NOT NULL);";
+
     public ChapitreBaseSqlite(@Nullable Context context,
                               @Nullable String name,
                               @Nullable CursorFactory factory,
