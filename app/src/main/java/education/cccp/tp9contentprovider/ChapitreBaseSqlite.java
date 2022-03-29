@@ -23,15 +23,28 @@ public class ChapitreBaseSqlite
     public static final int VERSION = 1;
     public static final String NAME_DB = "chapitre.db";
     public static final String TABLE_CHAPITRE = "table_chapitre";
-    public static final String COL_ID = "ID";
-    public static final String COL_NAME = "NAME";
-    public static final String COL_DESC = "DESCRIPTION";
-    public static final String CREATE_TABLE =
+    public static final String TABLE_CHAPITRE_COL_ID = "ID";
+    public static final String TABLE_CHAPITRE_COL_NAME = "NAME";
+    public static final String TABLE_CHAPITRE_COL_DESC = "DESCRIPTION";
+    public static final String CREATE_TABLE_CHAPITRE =
             "CREATE TABLE " + TABLE_CHAPITRE +
-                    " (" + COL_ID +
+                    " (" + TABLE_CHAPITRE_COL_ID +
                     " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                    COL_NAME + " TEXT NOT NULL, " +
-                    COL_DESC + " TEXT NOT NULL);";
+                    TABLE_CHAPITRE_COL_NAME + " TEXT NOT NULL, " +
+                    TABLE_CHAPITRE_COL_DESC + " TEXT NOT NULL);";
+    public static final String TABLE_PERSON = "table_person";
+    public static final String TABLE_PERSON_COL_ID = "ID";
+    public static final String TABLE_PERSON_COL_FIRST_NAME = "FIRST_NAME";
+    public static final String TABLE_PERSON_COL_LAST_NAME = "LAST_NAME";
+    public static final String CREATE_TABLE_PERSON =
+            "CREATE TABLE " + TABLE_PERSON +
+                    " (" + TABLE_PERSON_COL_ID +
+                    " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                    TABLE_PERSON_COL_FIRST_NAME + " TEXT NOT NULL, " +
+                    TABLE_PERSON_COL_LAST_NAME + " TEXT NOT NULL);";
+    public static final String CREATE_TABLES = CREATE_TABLE_CHAPITRE
+            + CREATE_TABLE_PERSON;
+
 
     public ChapitreBaseSqlite(@Nullable Context context,
                               @Nullable String name,
@@ -42,7 +55,7 @@ public class ChapitreBaseSqlite
 
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
-        sqLiteDatabase.execSQL(CREATE_TABLE);
+        sqLiteDatabase.execSQL(CREATE_TABLES);
     }
 
     @Override
@@ -51,6 +64,8 @@ public class ChapitreBaseSqlite
                           int newVersion) {
         sqLiteDatabase.execSQL("DROP TABLE "
                 + TABLE_CHAPITRE);
+        sqLiteDatabase.execSQL("DROP TABLE "
+                + TABLE_PERSON);
         onCreate(sqLiteDatabase);
     }
 }

@@ -4,15 +4,14 @@ import android.content.ContentProvider;
 import android.content.ContentUris;
 import android.content.ContentValues;
 import android.database.Cursor;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.util.Log;
 
-public class ChapitreContentProvider extends ContentProvider {
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
+public class PersonContentProvider extends ContentProvider {
 
     public static final Uri CONTENTURI = Uri.parse(
             "content://education.cccp.tp9contentprovider.ChapitreContentProvider");
@@ -43,7 +42,7 @@ public class ChapitreContentProvider extends ContentProvider {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
         long id = getId(uri);
         if (id < 0) return db.query(
-                ChapitreBaseSqlite.TABLE_CHAPITRE,
+                ChapitreBaseSqlite.TABLE_PERSON,
                 columns,
                 selection,
                 arguments,
@@ -53,7 +52,7 @@ public class ChapitreContentProvider extends ContentProvider {
         else return db.query(
                 ChapitreBaseSqlite.TABLE_CHAPITRE,
                 columns,
-                ChapitreBaseSqlite.TABLE_CHAPITRE_COL_ID + " = " + id,
+                ChapitreBaseSqlite.TABLE_PERSON_COL_ID + " = " + id,
                 arguments,
                 null,
                 null,
@@ -73,14 +72,14 @@ public class ChapitreContentProvider extends ContentProvider {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         try {
             long id = db.insertOrThrow(
-                    ChapitreBaseSqlite.TABLE_CHAPITRE,
+                    ChapitreBaseSqlite.TABLE_PERSON,
                     null,
                     contentValues
             );
             if (id == -1)
                 throw new RuntimeException("Failed insertion");
             else {
-                Log.d(ChapitreContentProvider.class.getName(),
+                Log.d(PersonContentProvider.class.getName(),
                         "uri: " + uri
                                 + " id: " + id);
                 return ContentUris.withAppendedId(uri, id);
@@ -91,7 +90,9 @@ public class ChapitreContentProvider extends ContentProvider {
     }
 
     @Override
-    public int delete(@NonNull Uri uri, @Nullable String s, @Nullable String[] strings) {
+    public int delete(@NonNull Uri uri,
+                      @Nullable String s,
+                      @Nullable String[] strings) {
         return 0;
     }
 
