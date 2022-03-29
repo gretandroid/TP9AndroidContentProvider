@@ -3,12 +3,16 @@ package education.cccp.tp9contentprovider;
 import android.content.ContentProvider;
 import android.content.ContentValues;
 import android.database.Cursor;
-import android.net.Uri;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import android.net.Uri;
 
 public class ChapitreContentProvider extends ContentProvider {
+
+    public static final Uri CONTENTURI=
+            Uri.parse("content://education.cccp.tp9contentprovider.ChapitreContentProvider");
+
     @Override
     public boolean onCreate() {
         return false;
