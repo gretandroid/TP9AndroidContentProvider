@@ -41,13 +41,15 @@ public class ChapitreBaseSqlite extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
-
+        sqLiteDatabase.execSQL(CREATE_TABLE);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase,
-                          int i,
-                          int i1) {
-
+                          int oldVersion,
+                          int newVersion) {
+        sqLiteDatabase.execSQL("DROP TABLE "
+                + TABLE_CHAPITRE);
+        onCreate(sqLiteDatabase);
     }
 }
