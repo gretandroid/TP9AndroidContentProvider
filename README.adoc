@@ -1,1 +1,12 @@
 = TP9 Android ContentProvider
+
+=== Exo
+
+ajouter une deuxieme table +
+Person( id autoincrement, +
+last_name, +
+first_name +
+) +
+ +
+-> inserer des données dans la table +
+-> afficher les données. +
