@@ -2,8 +2,6 @@ package education.cccp.tp9contentprovider;
 
 import static java.lang.String.format;
 
-import android.annotation.SuppressLint;
-
 public class Chapitre {
     private int id;
     private String name;

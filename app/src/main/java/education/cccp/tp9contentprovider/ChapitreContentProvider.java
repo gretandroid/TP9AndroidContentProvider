@@ -10,6 +10,7 @@ import androidx.annotation.Nullable;
 
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
+import android.util.Log;
 
 public class ChapitreContentProvider extends ContentProvider {
 
@@ -31,10 +32,32 @@ public class ChapitreContentProvider extends ContentProvider {
         return true;
     }
 
+
     @Nullable
     @Override
-    public Cursor query(@NonNull Uri uri, @Nullable String[] strings, @Nullable String s, @Nullable String[] strings1, @Nullable String s1) {
-        return null;
+    public Cursor query(@NonNull Uri uri,
+                        @Nullable String[] columns,
+                        @Nullable String selection,
+                        @Nullable String[] arguments,
+                        @Nullable String sort) {
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+        long id = getId(uri);
+        if (id < 0) return db.query(
+                ChapitreBaseSqlite.TABLE_CHAPITRE,
+                columns,
+                selection,
+                arguments,
+                null,
+                null,
+                sort);
+        else return db.query(
+                ChapitreBaseSqlite.TABLE_CHAPITRE,
+                columns,
+                ChapitreBaseSqlite.COL_ID + " = " + id,
+                arguments,
+                null,
+                null,
+                sort);
     }
 
     @Nullable
@@ -56,8 +79,12 @@ public class ChapitreContentProvider extends ContentProvider {
             );
             if (id == -1)
                 throw new RuntimeException("Failed insertion");
-            else
+            else {
+                Log.d(ChapitreContentProvider.class.getName(),
+                        "uri: " + uri
+                                + " id: " + id);
                 return ContentUris.withAppendedId(uri, id);
+            }
         } finally {
             db.close();
         }
@@ -85,5 +112,4 @@ public class ChapitreContentProvider extends ContentProvider {
             return Long.parseLong(lastPathSegment);
         return -1;
     }
-
 }

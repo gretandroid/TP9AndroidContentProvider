@@ -20,7 +20,8 @@
         </activity>
         <provider
             android:name=".ChapitreContentProvider"
-            android:authorities="education.cccp.tp9contentprovider.ChapitreContentProvider"
+            android:authorities=
+                "education.cccp.tp9contentprovider.ChapitreContentProvider"
             android:exported="true" />
     </application>
 

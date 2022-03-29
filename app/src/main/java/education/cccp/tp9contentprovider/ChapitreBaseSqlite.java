@@ -17,7 +17,8 @@ import androidx.annotation.Nullable;
 // De plus si la version(schéma) de la base de données change,
 // alors c'est la méthode onUpgrade(sqLiteDatabase) qui est appelé.
 
-public class ChapitreBaseSqlite extends SQLiteOpenHelper {
+public class ChapitreBaseSqlite
+        extends SQLiteOpenHelper {
 
     public static final int VERSION = 1;
     public static final String NAME_DB = "chapitre.db";
