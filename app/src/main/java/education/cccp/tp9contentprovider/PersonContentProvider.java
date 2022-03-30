@@ -1,7 +1,15 @@
 package education.cccp.tp9contentprovider;
 
+import static android.content.ContentUris.withAppendedId;
+import static android.net.Uri.parse;
+import static java.lang.Long.parseLong;
+import static education.cccp.tp9contentprovider.DataBaseHelper.NAME_DB;
+import static education.cccp.tp9contentprovider.DataBaseHelper.TABLE_CHAPITRE;
+import static education.cccp.tp9contentprovider.DataBaseHelper.TABLE_PERSON;
+import static education.cccp.tp9contentprovider.DataBaseHelper.TABLE_PERSON_COL_ID;
+import static education.cccp.tp9contentprovider.DataBaseHelper.VERSION;
+
 import android.content.ContentProvider;
-import android.content.ContentUris;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -11,22 +19,31 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+/*
+Developers usually create content URIs from the authority
+by appending paths that point to individual tables.
+For example, if you have two tables table1 and table2,
+you combine the authority from the previous example
+to yield the content URIs com.example.<appname>.provider/table1
+and com.example.<appname>.provider/table2.
+Paths aren't limited to a single segment,
+and there doesn't have to be a table for each level of the path.
+ */
 public class PersonContentProvider extends ContentProvider {
 
-    public static final Uri CONTENTURI = Uri.parse(
-            "content://education.cccp.tp9contentprovider.ChapitreContentProvider");
-    public final String CONTENT_PROVIDER_MIME =
-            "vnd.android.cursor.item/vnd.com.example.contentProvider.chapitres";
+    public static final Uri PERSON_CONTENT_URI = parse(
+            "content://education.cccp.tp9contentprovider.PersonContentProvider");
+    public static final int ID_ALL = -1;
 
-    private ChapitreBaseSqlite dbHelper;
+    private DataBaseHelper dbHelper;
 
     @Override
     public boolean onCreate() {
-        dbHelper = new ChapitreBaseSqlite(
+        dbHelper = new DataBaseHelper(
                 getContext(),
-                ChapitreBaseSqlite.NAME_DB,
+                NAME_DB,
                 null,
-                ChapitreBaseSqlite.VERSION
+                VERSION
         );
         return true;
     }
@@ -42,7 +59,7 @@ public class PersonContentProvider extends ContentProvider {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
         long id = getId(uri);
         if (id < 0) return db.query(
-                ChapitreBaseSqlite.TABLE_PERSON,
+                TABLE_PERSON,
                 columns,
                 selection,
                 arguments,
@@ -50,9 +67,9 @@ public class PersonContentProvider extends ContentProvider {
                 null,
                 sort);
         else return db.query(
-                ChapitreBaseSqlite.TABLE_CHAPITRE,
+                TABLE_PERSON,
                 columns,
-                ChapitreBaseSqlite.TABLE_PERSON_COL_ID + " = " + id,
+                TABLE_PERSON_COL_ID + " = " + id,
                 arguments,
                 null,
                 null,
@@ -69,23 +86,19 @@ public class PersonContentProvider extends ContentProvider {
     @Override
     public Uri insert(@NonNull Uri uri,
                       @Nullable ContentValues contentValues) {
-        SQLiteDatabase db = dbHelper.getWritableDatabase();
-        try {
+        try (SQLiteDatabase db = dbHelper.getWritableDatabase()) {
             long id = db.insertOrThrow(
-                    ChapitreBaseSqlite.TABLE_PERSON,
+                    TABLE_PERSON,
                     null,
                     contentValues
             );
-            if (id == -1)
-                throw new RuntimeException("Failed insertion");
+            if (id == -1) throw new RuntimeException("Failed insertion");
             else {
                 Log.d(PersonContentProvider.class.getName(),
                         "uri: " + uri
                                 + " id: " + id);
-                return ContentUris.withAppendedId(uri, id);
+                return withAppendedId(uri, id);
             }
-        } finally {
-            db.close();
         }
     }
 
@@ -106,11 +119,12 @@ public class PersonContentProvider extends ContentProvider {
 
 
     // Récupère la derniere partie de l'URI
+    // (content://education.cccp.tp9contentprovider.PersonContentProvider/#)
     public long getId(Uri uri) {
         String lastPathSegment = uri
                 .getLastPathSegment();
         if (lastPathSegment != null)
-            return Long.parseLong(lastPathSegment);
-        return -1;
+            return parseLong(lastPathSegment);
+        return ID_ALL;
     }
 }

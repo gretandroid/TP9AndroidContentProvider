@@ -5,6 +5,7 @@ import static android.database.sqlite.SQLiteDatabase.CursorFactory;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 import androidx.annotation.Nullable;
 
@@ -17,8 +18,7 @@ import androidx.annotation.Nullable;
 // De plus si la version(schéma) de la base de données change,
 // alors c'est la méthode onUpgrade(sqLiteDatabase) qui est appelé.
 
-public class ChapitreBaseSqlite
-        extends SQLiteOpenHelper {
+public class DataBaseHelper extends SQLiteOpenHelper {
 
     public static final int VERSION = 1;
     public static final String NAME_DB = "chapitre.db";
@@ -26,12 +26,13 @@ public class ChapitreBaseSqlite
     public static final String TABLE_CHAPITRE_COL_ID = "ID";
     public static final String TABLE_CHAPITRE_COL_NAME = "NAME";
     public static final String TABLE_CHAPITRE_COL_DESC = "DESCRIPTION";
-    public static final String CREATE_TABLE_CHAPITRE =
-            "CREATE TABLE " + TABLE_CHAPITRE +
-                    " (" + TABLE_CHAPITRE_COL_ID +
-                    " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                    TABLE_CHAPITRE_COL_NAME + " TEXT NOT NULL, " +
-                    TABLE_CHAPITRE_COL_DESC + " TEXT NOT NULL);";
+    public static final String CREATE_TABLE_CHAPITRE = String.format(
+            "CREATE TABLE %s (%s INTEGER PRIMARY KEY AUTOINCREMENT," +
+                    " %s TEXT NOT NULL, %s TEXT NOT NULL);",
+            TABLE_CHAPITRE,
+            TABLE_CHAPITRE_COL_ID,
+            TABLE_CHAPITRE_COL_NAME,
+            TABLE_CHAPITRE_COL_DESC);
     public static final String TABLE_PERSON = "table_person";
     public static final String TABLE_PERSON_COL_ID = "ID";
     public static final String TABLE_PERSON_COL_FIRST_NAME = "FIRST_NAME";
@@ -40,32 +41,35 @@ public class ChapitreBaseSqlite
             "CREATE TABLE " + TABLE_PERSON +
                     " (" + TABLE_PERSON_COL_ID +
                     " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                    TABLE_PERSON_COL_FIRST_NAME + " TEXT NOT NULL, " +
-                    TABLE_PERSON_COL_LAST_NAME + " TEXT NOT NULL);";
-    public static final String CREATE_TABLES = CREATE_TABLE_CHAPITRE
-            + CREATE_TABLE_PERSON;
+                    "" + TABLE_PERSON_COL_FIRST_NAME +
+                    " TEXT NOT NULL, " + TABLE_PERSON_COL_LAST_NAME +
+                    " TEXT NOT NULL);";
 
 
-    public ChapitreBaseSqlite(@Nullable Context context,
-                              @Nullable String name,
-                              @Nullable CursorFactory factory,
-                              int version) {
+    public DataBaseHelper(@Nullable Context context,
+                          @Nullable String name,
+                          @Nullable CursorFactory factory,
+                          int version) {
         super(context, name, factory, version);
     }
 
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
-        sqLiteDatabase.execSQL(CREATE_TABLES);
+        sqLiteDatabase.execSQL(CREATE_TABLE_CHAPITRE);
+//        sqLiteDatabase.execSQL(CREATE_TABLE_PERSON);
+        Log.d(DataBaseHelper.class.getSimpleName(),
+                CREATE_TABLE_PERSON);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase,
                           int oldVersion,
                           int newVersion) {
-        sqLiteDatabase.execSQL("DROP TABLE "
-                + TABLE_CHAPITRE);
-        sqLiteDatabase.execSQL("DROP TABLE "
-                + TABLE_PERSON);
+        Log.d(this.getClass().getSimpleName(),"ASMA3");
+        sqLiteDatabase.execSQL(String.format("DROP TABLE IF EXISTS %s",
+                TABLE_CHAPITRE));
+//        sqLiteDatabase.execSQL(String.format("DROP TABLE IF EXISTS %s",
+//                TABLE_PERSON));
         onCreate(sqLiteDatabase);
     }
 }

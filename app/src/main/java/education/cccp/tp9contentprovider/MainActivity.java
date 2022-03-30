@@ -1,5 +1,17 @@
 package education.cccp.tp9contentprovider;
 
+import static android.widget.Toast.LENGTH_SHORT;
+import static android.widget.Toast.makeText;
+import static education.cccp.tp9contentprovider.DataBaseHelper.TABLE_CHAPITRE_COL_DESC;
+import static education.cccp.tp9contentprovider.DataBaseHelper.TABLE_CHAPITRE_COL_ID;
+import static education.cccp.tp9contentprovider.DataBaseHelper.TABLE_CHAPITRE_COL_NAME;
+import static education.cccp.tp9contentprovider.DataBaseHelper.TABLE_PERSON_COL_FIRST_NAME;
+import static education.cccp.tp9contentprovider.DataBaseHelper.TABLE_PERSON_COL_ID;
+import static education.cccp.tp9contentprovider.DataBaseHelper.TABLE_PERSON_COL_LAST_NAME;
+import static education.cccp.tp9contentprovider.ChapitreContentProvider.CHAPITRE_CONTENT_URI;
+import static education.cccp.tp9contentprovider.PersonContentProvider.PERSON_CONTENT_URI;
+import static education.cccp.tp9contentprovider.R.layout.activity_main;
+
 import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.database.Cursor;
@@ -16,49 +28,49 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         insertDbValues();
         display();
-        setContentView(R.layout.activity_main);
+        setContentView(activity_main);
     }
 
     private void insertDbValues() {
         insertChapitresValues();
-        insertPersonsValues();
+//        insertPersonsValues();
     }
 
     private void display() {
-//        displayChaptitres();
-        displayPersons();
+        displayChapitres();
+//        displayPersons();
     }
 
     private void insertChapitresValues() {
         ContentValues chapitre = new ContentValues();
         chapitre.put(
-                ChapitreBaseSqlite.TABLE_CHAPITRE_COL_NAME,
+                TABLE_CHAPITRE_COL_NAME,
                 "chapitre 1");
         chapitre.put(
-                ChapitreBaseSqlite.TABLE_CHAPITRE_COL_DESC,
+                TABLE_CHAPITRE_COL_DESC,
                 "description chapitre 1");
         getContentResolver().insert(
-                ChapitreContentProvider.CONTENTURI,
+                CHAPITRE_CONTENT_URI,
                 chapitre);
     }
 
     private void insertPersonsValues() {
-        ContentValues chapitre = new ContentValues();
-        chapitre.put(
-                ChapitreBaseSqlite.TABLE_CHAPITRE_COL_NAME,
-                "chapitre 1");
-        chapitre.put(
-                ChapitreBaseSqlite.TABLE_CHAPITRE_COL_DESC,
-                "description chapitre 1");
+        ContentValues personValue = new ContentValues();
+        personValue.put(
+                TABLE_PERSON_COL_FIRST_NAME,
+                "John");
+        personValue.put(
+                TABLE_PERSON_COL_LAST_NAME,
+                "Doe");
         getContentResolver().insert(
-                ChapitreContentProvider.CONTENTURI,
-                chapitre);
+                PERSON_CONTENT_URI,
+                personValue);
     }
 
     @SuppressLint("Range")
-    private void displayChaptitres() {
+    private void displayChapitres() {
         Cursor cursor = getContentResolver().query(
-                ChapitreContentProvider.CONTENTURI,
+                CHAPITRE_CONTENT_URI,
                 null,
                 null,
                 null,
@@ -71,22 +83,19 @@ public class MainActivity extends AppCompatActivity {
                 queryResult = new StringBuilder("chapitre ")
                         .append("id: ")
                         .append(cursor.getString(
-                                cursor.getColumnIndex(ChapitreBaseSqlite
-                                        .TABLE_CHAPITRE_COL_ID)))
+                                cursor.getColumnIndex(TABLE_CHAPITRE_COL_ID)))
                         .append(" name : ")
                         .append(cursor.getString(cursor
-                                .getColumnIndex(ChapitreBaseSqlite
-                                        .TABLE_CHAPITRE_COL_NAME)))
+                                .getColumnIndex(TABLE_CHAPITRE_COL_NAME)))
                         .append(" description : ")
                         .append(cursor.getString(cursor
-                                .getColumnIndex(ChapitreBaseSqlite
-                                        .TABLE_CHAPITRE_COL_DESC)))
+                                .getColumnIndex(TABLE_CHAPITRE_COL_DESC)))
                         .toString();
                 Log.d(MainActivity.class.getSimpleName(),
                         "queryResult : " + queryResult);
-                Toast.makeText(this,
+                makeText(this,
                         queryResult,
-                        Toast.LENGTH_SHORT)
+                        LENGTH_SHORT)
                         .show();
             } while (cursor.moveToNext());
         }
@@ -96,7 +105,7 @@ public class MainActivity extends AppCompatActivity {
     @SuppressLint("Range")
     private void displayPersons() {
         Cursor cursor = getContentResolver().query(
-                ChapitreContentProvider.CONTENTURI,
+                PERSON_CONTENT_URI,
                 null,
                 null,
                 null,
@@ -109,22 +118,19 @@ public class MainActivity extends AppCompatActivity {
                 queryResult = new StringBuilder("person ")
                         .append("id: ")
                         .append(cursor.getString(
-                                cursor.getColumnIndex(ChapitreBaseSqlite
-                                        .TABLE_PERSON_COL_ID)))
+                                cursor.getColumnIndex(TABLE_PERSON_COL_ID)))
                         .append(" firstName : ")
                         .append(cursor.getString(cursor
-                                .getColumnIndex(ChapitreBaseSqlite
-                                        .TABLE_PERSON_COL_FIRST_NAME)))
+                                .getColumnIndex(TABLE_PERSON_COL_FIRST_NAME)))
                         .append(" lastName : ")
                         .append(cursor.getString(cursor
-                                .getColumnIndex(ChapitreBaseSqlite
-                                        .TABLE_PERSON_COL_LAST_NAME)))
+                                .getColumnIndex(TABLE_PERSON_COL_LAST_NAME)))
                         .toString();
                 Log.d(MainActivity.class.getSimpleName(),
                         "queryResult : " + queryResult);
-                Toast.makeText(this,
+                makeText(this,
                         queryResult,
-                        Toast.LENGTH_SHORT)
+                        LENGTH_SHORT)
                         .show();
             } while (cursor.moveToNext());
         }

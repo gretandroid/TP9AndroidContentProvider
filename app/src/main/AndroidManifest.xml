@@ -23,6 +23,11 @@
             android:authorities=
                 "education.cccp.tp9contentprovider.ChapitreContentProvider"
             android:exported="true" />
+        <provider
+            android:name=".PersonContentProvider"
+            android:authorities=
+                "education.cccp.tp9contentprovider.PersonContentProvider"
+            android:exported="true" />
     </application>
 
 </manifest>

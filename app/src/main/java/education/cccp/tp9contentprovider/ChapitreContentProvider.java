@@ -1,38 +1,47 @@
 package education.cccp.tp9contentprovider;
 
+import static android.content.ContentUris.withAppendedId;
+import static android.net.Uri.parse;
+import static java.lang.Long.parseLong;
+import static java.lang.String.format;
+import static education.cccp.tp9contentprovider.DataBaseHelper.NAME_DB;
+import static education.cccp.tp9contentprovider.DataBaseHelper.TABLE_CHAPITRE;
+import static education.cccp.tp9contentprovider.DataBaseHelper.TABLE_CHAPITRE_COL_ID;
+import static education.cccp.tp9contentprovider.DataBaseHelper.VERSION;
+
+import android.annotation.SuppressLint;
 import android.content.ContentProvider;
-import android.content.ContentUris;
 import android.content.ContentValues;
 import android.database.Cursor;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.util.Log;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 public class ChapitreContentProvider extends ContentProvider {
 
-    public static final Uri CONTENTURI = Uri.parse(
+    public static final Uri CHAPITRE_CONTENT_URI = parse(
             "content://education.cccp.tp9contentprovider.ChapitreContentProvider");
     public final String CONTENT_PROVIDER_MIME =
             "vnd.android.cursor.item/vnd.com.example.contentProvider.chapitres";
 
-    private ChapitreBaseSqlite dbHelper;
+    private DataBaseHelper dbHelper;
 
     @Override
     public boolean onCreate() {
-        dbHelper = new ChapitreBaseSqlite(
+        dbHelper = new DataBaseHelper(
                 getContext(),
-                ChapitreBaseSqlite.NAME_DB,
+                NAME_DB,
                 null,
-                ChapitreBaseSqlite.VERSION
+                VERSION
         );
         return true;
     }
 
 
+    @SuppressLint("DefaultLocale")
     @Nullable
     @Override
     public Cursor query(@NonNull Uri uri,
@@ -43,7 +52,7 @@ public class ChapitreContentProvider extends ContentProvider {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
         long id = getId(uri);
         if (id < 0) return db.query(
-                ChapitreBaseSqlite.TABLE_CHAPITRE,
+                TABLE_CHAPITRE,
                 columns,
                 selection,
                 arguments,
@@ -51,9 +60,11 @@ public class ChapitreContentProvider extends ContentProvider {
                 null,
                 sort);
         else return db.query(
-                ChapitreBaseSqlite.TABLE_CHAPITRE,
+                TABLE_CHAPITRE,
                 columns,
-                ChapitreBaseSqlite.TABLE_CHAPITRE_COL_ID + " = " + id,
+                format("%s = %d",
+                        TABLE_CHAPITRE_COL_ID,
+                        id),
                 arguments,
                 null,
                 null,
@@ -70,10 +81,9 @@ public class ChapitreContentProvider extends ContentProvider {
     @Override
     public Uri insert(@NonNull Uri uri,
                       @Nullable ContentValues contentValues) {
-        SQLiteDatabase db = dbHelper.getWritableDatabase();
-        try {
+        try (SQLiteDatabase db = dbHelper.getWritableDatabase()) {
             long id = db.insertOrThrow(
-                    ChapitreBaseSqlite.TABLE_CHAPITRE,
+                    TABLE_CHAPITRE,
                     null,
                     contentValues
             );
@@ -83,15 +93,15 @@ public class ChapitreContentProvider extends ContentProvider {
                 Log.d(ChapitreContentProvider.class.getName(),
                         "uri: " + uri
                                 + " id: " + id);
-                return ContentUris.withAppendedId(uri, id);
+                return withAppendedId(uri, id);
             }
-        } finally {
-            db.close();
         }
     }
 
     @Override
-    public int delete(@NonNull Uri uri, @Nullable String s, @Nullable String[] strings) {
+    public int delete(@NonNull Uri uri,
+                      @Nullable String s,
+                      @Nullable String[] strings) {
         return 0;
     }
 
@@ -109,7 +119,7 @@ public class ChapitreContentProvider extends ContentProvider {
         String lastPathSegment = uri
                 .getLastPathSegment();
         if (lastPathSegment != null)
-            return Long.parseLong(lastPathSegment);
+            return parseLong(lastPathSegment);
         return -1;
     }
 }
