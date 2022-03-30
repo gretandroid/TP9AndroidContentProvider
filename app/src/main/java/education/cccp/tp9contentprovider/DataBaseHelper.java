@@ -33,17 +33,26 @@ public class DataBaseHelper extends SQLiteOpenHelper {
             TABLE_CHAPITRE_COL_ID,
             TABLE_CHAPITRE_COL_NAME,
             TABLE_CHAPITRE_COL_DESC);
+
     public static final String TABLE_PERSON = "table_person";
     public static final String TABLE_PERSON_COL_ID = "ID";
     public static final String TABLE_PERSON_COL_FIRST_NAME = "FIRST_NAME";
     public static final String TABLE_PERSON_COL_LAST_NAME = "LAST_NAME";
-    public static final String CREATE_TABLE_PERSON =
+    public static final String CREATE_TABLE_PERSON2 =
             "CREATE TABLE " + TABLE_PERSON +
                     " (" + TABLE_PERSON_COL_ID +
                     " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                     "" + TABLE_PERSON_COL_FIRST_NAME +
                     " TEXT NOT NULL, " + TABLE_PERSON_COL_LAST_NAME +
                     " TEXT NOT NULL);";
+
+    public static final String CREATE_TABLE_PERSON = String.format(
+            "CREATE TABLE %s (%s INTEGER PRIMARY KEY AUTOINCREMENT," +
+                    " %s TEXT NOT NULL, %s TEXT NOT NULL);",
+            TABLE_PERSON,
+            TABLE_PERSON_COL_ID,
+            TABLE_PERSON_COL_FIRST_NAME,
+            TABLE_PERSON_COL_LAST_NAME);
 
 
     public DataBaseHelper(@Nullable Context context,
@@ -55,8 +64,11 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
+        Log.d(DataBaseHelper.class.getSimpleName(),
+                CREATE_TABLE_PERSON);
+        Log.d(this.getClass().getSimpleName(),"ASMA1");
         sqLiteDatabase.execSQL(CREATE_TABLE_CHAPITRE);
-//        sqLiteDatabase.execSQL(CREATE_TABLE_PERSON);
+        sqLiteDatabase.execSQL(CREATE_TABLE_PERSON);
         Log.d(DataBaseHelper.class.getSimpleName(),
                 CREATE_TABLE_PERSON);
     }
@@ -68,8 +80,8 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         Log.d(this.getClass().getSimpleName(),"ASMA3");
         sqLiteDatabase.execSQL(String.format("DROP TABLE IF EXISTS %s",
                 TABLE_CHAPITRE));
-//        sqLiteDatabase.execSQL(String.format("DROP TABLE IF EXISTS %s",
-//                TABLE_PERSON));
+        sqLiteDatabase.execSQL(String.format("DROP TABLE IF EXISTS %s",
+                TABLE_PERSON));
         onCreate(sqLiteDatabase);
     }
 }

@@ -33,12 +33,12 @@ public class MainActivity extends AppCompatActivity {
 
     private void insertDbValues() {
         insertChapitresValues();
-//        insertPersonsValues();
+        insertPersonsValues();
     }
 
     private void display() {
         displayChapitres();
-//        displayPersons();
+        displayPersons();
     }
 
     private void insertChapitresValues() {
