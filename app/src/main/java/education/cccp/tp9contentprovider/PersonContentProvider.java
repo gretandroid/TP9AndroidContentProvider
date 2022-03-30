@@ -3,11 +3,12 @@ package education.cccp.tp9contentprovider;
 import static android.content.ContentUris.withAppendedId;
 import static android.net.Uri.parse;
 import static java.lang.Long.parseLong;
+import static education.cccp.tp9contentprovider.DataBaseHelper.BASE_CONTENT_URI;
 import static education.cccp.tp9contentprovider.DataBaseHelper.NAME_DB;
-import static education.cccp.tp9contentprovider.DataBaseHelper.TABLE_CHAPITRE;
-import static education.cccp.tp9contentprovider.DataBaseHelper.TABLE_PERSON;
-import static education.cccp.tp9contentprovider.DataBaseHelper.TABLE_PERSON_COL_ID;
+import static education.cccp.tp9contentprovider.DataBaseHelper.NO_URI_RESOURCE_ID_FOUND_RESULT;
 import static education.cccp.tp9contentprovider.DataBaseHelper.VERSION;
+import static education.cccp.tp9contentprovider.Person.TABLE_PERSON;
+import static education.cccp.tp9contentprovider.Person.TABLE_PERSON_COL_ID;
 
 import android.content.ContentProvider;
 import android.content.ContentValues;
@@ -31,9 +32,10 @@ and there doesn't have to be a table for each level of the path.
  */
 public class PersonContentProvider extends ContentProvider {
 
+
     public static final Uri PERSON_CONTENT_URI = parse(
-            "content://education.cccp.tp9contentprovider.PersonContentProvider");
-    public static final int ID_ALL = -1;
+            BASE_CONTENT_URI + PersonContentProvider.class.getName());
+
 
     private DataBaseHelper dbHelper;
 
@@ -69,7 +71,10 @@ public class PersonContentProvider extends ContentProvider {
         else return db.query(
                 TABLE_PERSON,
                 columns,
-                TABLE_PERSON_COL_ID + " = " + id,
+                new StringBuilder(TABLE_PERSON_COL_ID)
+                        .append(" = ")
+                        .append(id)
+                        .toString(),
                 arguments,
                 null,
                 null,
@@ -93,12 +98,7 @@ public class PersonContentProvider extends ContentProvider {
                     contentValues
             );
             if (id == -1) throw new RuntimeException("Failed insertion");
-            else {
-                Log.d(PersonContentProvider.class.getName(),
-                        "uri: " + uri
-                                + " id: " + id);
-                return withAppendedId(uri, id);
-            }
+            else return withAppendedId(uri, id);
         }
     }
 
@@ -125,6 +125,6 @@ public class PersonContentProvider extends ContentProvider {
                 .getLastPathSegment();
         if (lastPathSegment != null)
             return parseLong(lastPathSegment);
-        return ID_ALL;
+        return NO_URI_RESOURCE_ID_FOUND_RESULT;
     }
 }

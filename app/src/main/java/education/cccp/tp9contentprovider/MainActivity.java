@@ -2,13 +2,13 @@ package education.cccp.tp9contentprovider;
 
 import static android.widget.Toast.LENGTH_SHORT;
 import static android.widget.Toast.makeText;
-import static education.cccp.tp9contentprovider.DataBaseHelper.TABLE_CHAPITRE_COL_DESC;
-import static education.cccp.tp9contentprovider.DataBaseHelper.TABLE_CHAPITRE_COL_ID;
-import static education.cccp.tp9contentprovider.DataBaseHelper.TABLE_CHAPITRE_COL_NAME;
-import static education.cccp.tp9contentprovider.DataBaseHelper.TABLE_PERSON_COL_FIRST_NAME;
-import static education.cccp.tp9contentprovider.DataBaseHelper.TABLE_PERSON_COL_ID;
-import static education.cccp.tp9contentprovider.DataBaseHelper.TABLE_PERSON_COL_LAST_NAME;
+import static education.cccp.tp9contentprovider.Chapitre.TABLE_CHAPITRE_COL_DESC;
+import static education.cccp.tp9contentprovider.Chapitre.TABLE_CHAPITRE_COL_ID;
+import static education.cccp.tp9contentprovider.Chapitre.TABLE_CHAPITRE_COL_NAME;
 import static education.cccp.tp9contentprovider.ChapitreContentProvider.CHAPITRE_CONTENT_URI;
+import static education.cccp.tp9contentprovider.Person.TABLE_PERSON_COL_FIRST_NAME;
+import static education.cccp.tp9contentprovider.Person.TABLE_PERSON_COL_ID;
+import static education.cccp.tp9contentprovider.Person.TABLE_PERSON_COL_LAST_NAME;
 import static education.cccp.tp9contentprovider.PersonContentProvider.PERSON_CONTENT_URI;
 import static education.cccp.tp9contentprovider.R.layout.activity_main;
 
@@ -17,7 +17,6 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 

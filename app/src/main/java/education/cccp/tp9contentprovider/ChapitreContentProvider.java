@@ -3,10 +3,11 @@ package education.cccp.tp9contentprovider;
 import static android.content.ContentUris.withAppendedId;
 import static android.net.Uri.parse;
 import static java.lang.Long.parseLong;
-import static java.lang.String.format;
+import static education.cccp.tp9contentprovider.Chapitre.TABLE_CHAPITRE;
+import static education.cccp.tp9contentprovider.Chapitre.TABLE_CHAPITRE_COL_ID;
+import static education.cccp.tp9contentprovider.DataBaseHelper.BASE_CONTENT_URI;
 import static education.cccp.tp9contentprovider.DataBaseHelper.NAME_DB;
-import static education.cccp.tp9contentprovider.DataBaseHelper.TABLE_CHAPITRE;
-import static education.cccp.tp9contentprovider.DataBaseHelper.TABLE_CHAPITRE_COL_ID;
+import static education.cccp.tp9contentprovider.DataBaseHelper.NO_URI_RESOURCE_ID_FOUND_RESULT;
 import static education.cccp.tp9contentprovider.DataBaseHelper.VERSION;
 
 import android.annotation.SuppressLint;
@@ -22,10 +23,10 @@ import androidx.annotation.Nullable;
 
 public class ChapitreContentProvider extends ContentProvider {
 
+
     public static final Uri CHAPITRE_CONTENT_URI = parse(
-            "content://education.cccp.tp9contentprovider.ChapitreContentProvider");
-    public final String CONTENT_PROVIDER_MIME =
-            "vnd.android.cursor.item/vnd.com.example.contentProvider.chapitres";
+            BASE_CONTENT_URI + ChapitreContentProvider.class.getName()
+    );
 
     private DataBaseHelper dbHelper;
 
@@ -62,9 +63,10 @@ public class ChapitreContentProvider extends ContentProvider {
         else return db.query(
                 TABLE_CHAPITRE,
                 columns,
-                format("%s = %d",
-                        TABLE_CHAPITRE_COL_ID,
-                        id),
+                new StringBuilder(TABLE_CHAPITRE_COL_ID)
+                        .append(" = ")
+                        .append(id)
+                        .toString(),
                 arguments,
                 null,
                 null,
@@ -120,6 +122,6 @@ public class ChapitreContentProvider extends ContentProvider {
                 .getLastPathSegment();
         if (lastPathSegment != null)
             return parseLong(lastPathSegment);
-        return -1;
+        return NO_URI_RESOURCE_ID_FOUND_RESULT;
     }
 }
